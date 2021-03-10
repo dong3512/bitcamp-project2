@@ -18,10 +18,11 @@ public class ClientApp {
 
   public ClientApp(String serverAddress, int port) {
     this.serverAddress = serverAddress;
-    this.port = port;
+    this.port = port ;
   }
 
   public void execute() {
+
     try (Socket socket = new Socket(this.serverAddress, this.port);
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());
         DataInputStream in = new DataInputStream(socket.getInputStream())) {
@@ -38,16 +39,17 @@ public class ClientApp {
 
         String response = in.readUTF();
         int length = in.readInt();
+
         ArrayList<String> data = null;
         if (length > 0) {
           data = new ArrayList<>();
-          for (int i = 0; i < length; i++) {
+          for (int i = 0; i < length; i ++) {
             data.add(in.readUTF());
           }
         }
 
-        System.out.println("------------------");
-        System.out.printf("작업결과: %s\n", response);
+        System.out.println("------------");
+        System.out.printf("작업결과: %s\n" , response);
         System.out.printf("데이터 개수: %d\n", length);
         if (data != null) {
           System.out.println("데이터:");
@@ -55,6 +57,7 @@ public class ClientApp {
             System.out.println(str);
           }
         }
+
 
         if (message.equals("quit")) {
           break;
@@ -66,6 +69,6 @@ public class ClientApp {
     }catch (Exception e) {
       System.out.println("서버와 통신 하는 중에 오류 발생!");
     }
-  }
 
+  }
 }
