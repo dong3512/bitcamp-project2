@@ -1,16 +1,15 @@
 package com.eomcs.pms;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import com.eomcs.driver.Statement;
 import com.eomcs.pms.handler.BoardAddHandler;
 import com.eomcs.pms.handler.BoardDeleteHandler;
 import com.eomcs.pms.handler.BoardDetailHandler;
 import com.eomcs.pms.handler.BoardListHandler;
+import com.eomcs.pms.handler.BoardSearchHandler;
 import com.eomcs.pms.handler.BoardUpdateHandler;
 import com.eomcs.pms.handler.Command;
 import com.eomcs.util.Prompt;
@@ -44,10 +43,28 @@ public class ClientApp {
     commandMap.put("/board/detail", new BoardDetailHandler());
     commandMap.put("/board/update", new BoardUpdateHandler());
     commandMap.put("/board/delete", new BoardDeleteHandler());
+    commandMap.put("/board/search", new BoardSearchHandler());
+    //
+    //    commandMap.put("/member/add", new MemberAddHandler());
+    //    commandMap.put("/member/list", new MemberListHandler());
+    //    commandMap.put("/member/detail", new MemberDetailHandler());
+    //    commandMap.put("/member/update", new MemberUpdateHandler());
+    //    commandMap.put("/member/delete", new MemberDeleteHandler());
+    //
+    //    commandMap.put("/project/add", new ProjectAddHandler());
+    //    commandMap.put("/project/list", new ProjectListHandler());
+    //    commandMap.put("/project/detail", new ProjectDetailHandler());
+    //    commandMap.put("/project/update", new ProjectUpdateHandler());
+    //    commandMap.put("/project/delete", new ProjectDeleteHandler());
+    //
+    //    commandMap.put("/task/add", new TaskAddHandler());
+    //    commandMap.put("/task/list", new TaskListHandler());
+    //    commandMap.put("/task/detail", new TaskDetailHandler());
+    //    commandMap.put("/task/update", new TaskUpdateHandler());
+    //    commandMap.put("/task/delete", new TaskDeleteHandler());
 
-    try (Socket socket = new Socket(this.serverAddress, this.port);
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-        DataInputStream in = new DataInputStream(socket.getInputStream())) {
+    try (// 서버와 통신하는 것을 대행해 줄 객체를 준비한다.
+        Statement stmt = new Statement(serverAddress, port)) {
 
       while (true) {
 
@@ -71,17 +88,7 @@ public class ClientApp {
               break;
             case "quit":
             case "exit":
-              // 서버에게 종료한다고 메시지를 보낸다.
-              out.writeUTF("quit");
-              out.writeInt(0);
-              out.flush();
-
-              // 서버의 응답을 읽는다.
-              // - 서버가 보낸 응답을 읽지 않으면 프로토콜 위반이다.
-              // - 서버가 보낸 데이터를 사용하지 않더라도 프로토콜 규칙에 따라 읽어야 한다.
-              in.readUTF();
-              in.readInt();
-
+              stmt.executeUpdate("quit");
               System.out.println("안녕!");
               return;
             default:
@@ -90,7 +97,7 @@ public class ClientApp {
               if (commandHandler == null) {
                 System.out.println("실행할 수 없는 명령입니다.");
               } else {
-                commandHandler.service(in, out);
+                commandHandler.service(stmt);
               }
           }
         } catch (Exception e) {
