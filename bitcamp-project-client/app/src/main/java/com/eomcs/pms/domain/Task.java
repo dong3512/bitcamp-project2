@@ -1,9 +1,8 @@
 package com.eomcs.pms.domain;
 
 import java.sql.Date;
-import com.eomcs.util.CsvObject;
 
-public class Task implements CsvObject {
+public class Task {
   private int no;
   private String content;
   private Date deadline;
@@ -27,7 +26,6 @@ public class Task implements CsvObject {
         + ", status=" + status + "]";
   }
 
-  @Override
   public String toCsvString() {
     return String.format("%d,%s,%s,%d,%s", 
         this.getNo(),
@@ -113,5 +111,14 @@ public class Task implements CsvObject {
     this.status = status;
   }
 
-
+  public static String getStatusLabel(int status) {
+    switch (status) {
+      case 1:
+        return "진행중";
+      case 2:
+        return "완료";
+      default:
+        return "신규";
+    }
+  }
 }
