@@ -11,9 +11,9 @@ public class BoardListHandler implements Command {
   public void service() throws Exception {
     System.out.println("[게시글 목록]");
 
-    try (Connection con = DriverManager.getConnection( //
+    try (Connection con = DriverManager.getConnection(
         "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-        PreparedStatement stmt = con.prepareStatement( //
+        PreparedStatement stmt = con.prepareStatement(
             "select no,title,writer,cdt,vw_cnt from pms_board order by no desc");
         ResultSet rs = stmt.executeQuery()) {
 
@@ -26,6 +26,7 @@ public class BoardListHandler implements Command {
             rs.getInt("vw_cnt"));
       }
     }
+
   }
 }
 

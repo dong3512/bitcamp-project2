@@ -10,7 +10,7 @@ public class TaskAddHandler implements Command {
 
   MemberValidator memberValidator;
 
-  public TaskAddHandler( MemberValidator memberValidator) {
+  public TaskAddHandler(MemberValidator memberValidator) {
     this.memberValidator = memberValidator;
   }
 
@@ -30,19 +30,19 @@ public class TaskAddHandler implements Command {
       return;
     }
 
-    try (Connection con = DriverManager.getConnection( //
+    try (Connection con = DriverManager.getConnection(
         "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
-        PreparedStatement stmt =
-            con.prepareStatement("insert into pms_task (content,deadline,owner,status) values(?,?,?,?)");) {
+        PreparedStatement stmt = con.prepareStatement(
+            "insert into pms_task(content,deadline,owner,status) values(?,?,?,?)");) {
 
       stmt.setString(1, t.getContent());
       stmt.setDate(2, t.getDeadline());
       stmt.setString(3, t.getOwner());
       stmt.setInt(4, t.getStatus());
-
       stmt.executeUpdate();
 
       System.out.println("작업을 등록했습니다.");
     }
+
   }
 }
