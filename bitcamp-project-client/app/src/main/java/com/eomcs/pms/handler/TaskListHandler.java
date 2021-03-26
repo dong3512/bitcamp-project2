@@ -26,6 +26,7 @@ public class TaskListHandler implements Command {
             rs.getString("owner"),
             Task.getStatusLabel(rs.getInt("status")));
       }
+
     }
   }
 }
