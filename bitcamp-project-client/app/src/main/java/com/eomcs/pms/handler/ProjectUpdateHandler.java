@@ -15,6 +15,7 @@ public class ProjectUpdateHandler implements Command {
     this.memberValidator = memberValidator;
   }
 
+
   @Override
   public void service() throws Exception {
     System.out.println("[프로젝트 변경]");
