@@ -44,7 +44,7 @@ public class ProjectAddHandler implements Command {
             "insert into pms_member_project(member_no,project_no) values(?,?)")) {
 
       // 수동 커밋으로 설정한다.
-      // - pms_project 테이블과 pms_member_project 테이블에 모두 성공적으로 데이터를 저장했을 때
+      // - pms_project 테이블과 pms_member_project 테이블에 모두 성공적으로 데이터를 저장했을 때 
       //   작업을 완료한다.
       con.setAutoCommit(false); // 의미 => 트랜잭션 시작
 
