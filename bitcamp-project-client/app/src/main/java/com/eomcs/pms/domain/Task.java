@@ -17,7 +17,6 @@ public class Task {
         + ", status=" + status + ", projectNo=" + projectNo + ", projectTitle=" + projectTitle
         + "]";
   }
-
   public int getNo() {
     return no;
   }
@@ -36,17 +35,17 @@ public class Task {
   public void setDeadline(Date deadline) {
     this.deadline = deadline;
   }
-  public Member getOwner() {
-    return owner;
-  }
-  public void setOwner(Member owner) {
-    this.owner = owner;
-  }
   public int getStatus() {
     return status;
   }
   public void setStatus(int status) {
     this.status = status;
+  }
+  public Member getOwner() {
+    return owner;
+  }
+  public void setOwner(Member owner) {
+    this.owner = owner;
   }
   public int getProjectNo() {
     return projectNo;
@@ -60,6 +59,7 @@ public class Task {
   public void setProjectTitle(String projectTitle) {
     this.projectTitle = projectTitle;
   }
+
   public static String getStatusLabel(int status) {
     switch (status) {
       case 1:
