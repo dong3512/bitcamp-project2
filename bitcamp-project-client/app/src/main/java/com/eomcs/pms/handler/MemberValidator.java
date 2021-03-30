@@ -26,7 +26,7 @@ public class MemberValidator {
         stmt.setString(1, name);
 
         try (ResultSet rs = stmt.executeQuery()) {
-          if (rs.next()) {
+          if(rs.next()) {
             Member member = new Member();
             member.setNo(rs.getInt("no"));
             member.setName(rs.getString("name"));

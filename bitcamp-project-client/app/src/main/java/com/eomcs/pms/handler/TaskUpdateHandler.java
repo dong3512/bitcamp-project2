@@ -32,9 +32,12 @@ public class TaskUpdateHandler implements Command {
                 + "   t.deadline,"
                 + "   t.status,"
                 + "   m.no as owner_no,"
-                + "   m.name as owner_name"
+                + "   m.name as owner_name,"
+                + "   p.no as project_no,"
+                + "   p.title as project_title"
                 + " from pms_task t "
                 + "   inner join pms_member m on t.owner=m.no"
+                + "   inner join pms_project p on t.project_no=p.no"
                 + " where t.no=?");
         PreparedStatement stmt2 = con.prepareStatement(
             "update pms_task set content=?,deadline=?,owner=?,status=? where no=?")) {
@@ -52,12 +55,18 @@ public class TaskUpdateHandler implements Command {
         task.setNo(no); 
         task.setContent(rs.getString("content"));
         task.setDeadline(rs.getDate("deadline"));
+        task.setStatus(rs.getInt("status"));
+
         Member owner = new Member();
         owner.setNo(rs.getInt("owner_no"));
         owner.setName(rs.getString("owner_name"));
         task.setOwner(owner);
-        task.setStatus(rs.getInt("status"));
+
+        task.setProjectNo(rs.getInt("project_no"));
+        task.setProjectTitle(rs.getString("project_title"));
       }
+
+      System.out.printf("현재 프로젝트: %s\n", task.getProjectTitle());
 
       // 2) 사용자에게서 변경할 데이터를 입력 받는다.
       task.setContent(Prompt.inputString(String.format("내용(%s)? ", task.getContent())));
