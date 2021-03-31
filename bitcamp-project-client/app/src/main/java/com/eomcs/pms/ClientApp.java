@@ -1,5 +1,7 @@
 package com.eomcs.pms;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -61,11 +63,14 @@ public class ClientApp {
 
   public void execute() throws Exception {
 
+
+    Connection con = DriverManager.getConnection(
+        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
     // 핸들러가 사용할 DAO 객체 준비
-    BoardDaoImpl boardDao = new BoardDaoImpl();
-    MemberDaoImpl memberDao = new MemberDaoImpl();
-    ProjectDaoImpl projectDao = new ProjectDaoImpl();
-    TaskDaoImpl taskDao = new TaskDaoImpl();
+    BoardDaoImpl boardDao = new BoardDaoImpl(con);
+    MemberDaoImpl memberDao = new MemberDaoImpl(con);
+    ProjectDaoImpl projectDao = new ProjectDaoImpl(con);
+    TaskDaoImpl taskDao = new TaskDaoImpl(con);
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
     HashMap<String,Command> commandMap = new HashMap<>();
@@ -144,6 +149,7 @@ public class ClientApp {
       System.out.println("서버와 통신 하는 중에 오류 발생!");
     }
 
+    con.close();
     Prompt.close();
   }
 

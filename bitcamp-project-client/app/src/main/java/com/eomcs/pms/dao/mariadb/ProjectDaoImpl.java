@@ -1,7 +1,6 @@
 package com.eomcs.pms.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -18,9 +17,11 @@ public class ProjectDaoImpl implements ProjectDao{
 
   Connection con;
 
-  public ProjectDaoImpl() throws Exception {
-    this.con = DriverManager.getConnection(
-        "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
+  //Connection 객체를 자체적으로 생성하지 않고 외부에서 주입받는다.
+  // - Connectrion 객체를 여러 DAO가 공유할 수 있다.
+  // 교체하기도 쉽다.
+  public ProjectDaoImpl(Connection con) throws Exception {
+    this.con = con;
   }
 
   // 이제 메서드들은 인스턴스 필드에 들어있는 Connection 객체를 사용해야 하기 때문에
@@ -60,6 +61,12 @@ public class ProjectDaoImpl implements ProjectDao{
       con.commit(); // 의미 : 트랜잭션 종료
 
       return count;
+    }catch (Exception e) {
+      con.rollback();
+      // 이 catch 블록의 목적은 예외를 처리 하는 것이 아니라,
+      // rollback을 실행하는 것이다
+      // 따라서 예외가 발생한 사실은 이전처럼 호출자에게 그대로 보고해야 한다.
+      throw e;
 
     } finally {
       // 트랜잭션 종료 후 auto commit 을 원래 상태로 설정한다.
@@ -177,6 +184,12 @@ public class ProjectDaoImpl implements ProjectDao{
       con.commit();
 
       return count;
+    }catch (Exception e) {
+      con.rollback();
+      // 이 catch 블록의 목적은 예외를 처리 하는 것이 아니라,
+      // rollback을 실행하는 것이다
+      // 따라서 예외가 발생한 사실은 이전처럼 호출자에게 그대로 보고해야 한다.
+      throw e;
 
     } finally {
       // 트랜잭션 종료 후 auto commit 을 원래 상태로 설정한다.
@@ -200,6 +213,12 @@ public class ProjectDaoImpl implements ProjectDao{
       con.commit();
 
       return count;
+    }catch (Exception e) {
+      con.rollback();
+      // 이 catch 블록의 목적은 예외를 처리 하는 것이 아니라,
+      // rollback을 실행하는 것이다
+      // 따라서 예외가 발생한 사실은 이전처럼 호출자에게 그대로 보고해야 한다.
+      throw e;
 
     } finally {
       // 트랜잭션 종료 후 auto commit 을 원래 상태로 설정한다.
