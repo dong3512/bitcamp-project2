@@ -33,9 +33,9 @@ public class ProjectDetailHandler implements Command {
     System.out.printf("종료일: %s\n", project.getEndDate());
     System.out.printf("관리자: %s\n", project.getOwner().getName());
 
+    // 프로젝트의 팀원 목록 가져오기
     StringBuilder strBuilder = new StringBuilder();
     List<Member> members = project.getMembers();
-
     for (Member m : members) {
       if (strBuilder.length() > 0) {
         strBuilder.append("/");

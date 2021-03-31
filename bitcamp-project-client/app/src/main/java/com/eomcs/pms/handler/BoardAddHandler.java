@@ -7,7 +7,7 @@ import com.eomcs.util.Prompt;
 
 public class BoardAddHandler implements Command {
 
-  // 핸들러가 사용할 DAO 
+  // 핸들러가 사용할 DAO : 의존 객체(dependency)
   BoardDao boardDao;
 
   // DAO 객체는 이 클래스가 작업하는데 필수 객체이기 때문에

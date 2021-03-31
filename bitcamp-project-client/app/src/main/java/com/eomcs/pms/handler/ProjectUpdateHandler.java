@@ -28,9 +28,8 @@ public class ProjectUpdateHandler implements Command {
       System.out.println("해당 번호의 프로젝트가 없습니다.");
       return;
     }
-    project.setNo(no); 
 
-    // 2) 사용자에게서 변경할 데이터를 입력 받는다.
+    // 사용자에게서 변경할 데이터를 입력 받는다.
     project.setTitle(Prompt.inputString(
         String.format("프로젝트명(%s)? ", project.getTitle())));
     project.setContent(Prompt.inputString(
@@ -47,7 +46,7 @@ public class ProjectUpdateHandler implements Command {
       return;
     }
 
-    // 3) 프로젝트 팀원 정보를 입력 받는다.
+    // 프로젝트 팀원 정보를 입력 받는다.
     StringBuilder strBuilder = new StringBuilder();
     List<Member> members = project.getMembers();
     for (Member m : members) {
@@ -56,6 +55,7 @@ public class ProjectUpdateHandler implements Command {
       }
       strBuilder.append(m.getName());
     }
+
     project.setMembers(memberValidator.inputMembers(
         String.format("팀원(%s)?(완료: 빈 문자열) ", strBuilder)));
 
@@ -65,6 +65,7 @@ public class ProjectUpdateHandler implements Command {
       return;
     }
 
+    // DBMS에게 프로젝트 변경을 요청한다.
     projectDao.update(project);
 
     System.out.println("프로젝트을 변경하였습니다.");
