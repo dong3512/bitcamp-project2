@@ -10,22 +10,17 @@ import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
 
-// 한 번에 4번째 단계까지 가지말고 일단 3번째와 4번째 단계 사이에 있는 정도로 구현을 해보자.
-// - 각 DAO 클래스는 Connection 객체를 공유하기 위해 인스턴스 필드로 선언한다.
-// - 각 DAO 클래스는 DAO 인스턴스가 생성될 때 Connection 객체를 만든다.
-public class ProjectDaoImpl implements ProjectDao{
+public class ProjectDaoImpl implements ProjectDao {
 
   Connection con;
 
-  //Connection 객체를 자체적으로 생성하지 않고 외부에서 주입받는다.
-  // - Connectrion 객체를 여러 DAO가 공유할 수 있다.
-  // 교체하기도 쉽다.
+  // Connection 객체를 자체적으로 생성하지 않고 외부에서 주입받는다.
+  // - Connection 객체를 여러 DAO가 공유할 수 있다.
+  // - 교체하기도 쉽다.
   public ProjectDaoImpl(Connection con) throws Exception {
     this.con = con;
   }
 
-  // 이제 메서드들은 인스턴스 필드에 들어있는 Connection 객체를 사용해야 하기 때문에
-  // 스태틱 메서드가 아닌 인스턴스 메서드로 선언해야 한다.
   @Override
   public int insert(Project project) throws Exception {
     try (PreparedStatement stmt = con.prepareStatement(
@@ -33,7 +28,7 @@ public class ProjectDaoImpl implements ProjectDao{
         Statement.RETURN_GENERATED_KEYS)) {
 
       // 수동 커밋으로 설정한다.
-      // - pms_project 테이블과 pms_member_project 테이블에 모두 성공적으로 데이터를 저장했을 때 
+      // - pms_project 테이블과 pms_member_project 테이블에 모두 성공적으로 데이터를 저장했을 때
       //   작업을 완료한다.
       con.setAutoCommit(false); // 의미 => 트랜잭션 시작
 
@@ -44,6 +39,9 @@ public class ProjectDaoImpl implements ProjectDao{
       stmt.setDate(4, project.getEndDate());
       stmt.setInt(5, project.getOwner().getNo());
       int count = stmt.executeUpdate();
+
+      // 위의 입력을 수행한 후 일부로 다음 입력을 60초 정도 지연시킨다.
+      Thread.sleep(60000);
 
       // 프로젝트 데이터의 PK 값 알아내기
       try (ResultSet keyRs = stmt.getGeneratedKeys()) {
@@ -61,10 +59,12 @@ public class ProjectDaoImpl implements ProjectDao{
       con.commit(); // 의미 : 트랜잭션 종료
 
       return count;
-    }catch (Exception e) {
+
+    } catch (Exception e) {
       con.rollback();
+
       // 이 catch 블록의 목적은 예외를 처리 하는 것이 아니라,
-      // rollback을 실행하는 것이다
+      // rollback을 실행하는 것이다.
       // 따라서 예외가 발생한 사실은 이전처럼 호출자에게 그대로 보고해야 한다.
       throw e;
 
@@ -79,7 +79,7 @@ public class ProjectDaoImpl implements ProjectDao{
     ArrayList<Project> list = new ArrayList<>();
 
     try (PreparedStatement stmt = con.prepareStatement(
-        "select" 
+        "select"
             + "    p.no,"
             + "    p.title,"
             + "    p.sdt,"
@@ -161,7 +161,7 @@ public class ProjectDaoImpl implements ProjectDao{
             + " sdt=?,"
             + " edt=?,"
             + " owner=?"
-            + " where no=?")) { 
+            + " where no=?")) {
 
       con.setAutoCommit(false);
 
@@ -184,10 +184,12 @@ public class ProjectDaoImpl implements ProjectDao{
       con.commit();
 
       return count;
-    }catch (Exception e) {
+
+    } catch (Exception e) {
       con.rollback();
+
       // 이 catch 블록의 목적은 예외를 처리 하는 것이 아니라,
-      // rollback을 실행하는 것이다
+      // rollback을 실행하는 것이다.
       // 따라서 예외가 발생한 사실은 이전처럼 호출자에게 그대로 보고해야 한다.
       throw e;
 
@@ -213,10 +215,12 @@ public class ProjectDaoImpl implements ProjectDao{
       con.commit();
 
       return count;
-    }catch (Exception e) {
+
+    } catch (Exception e) {
       con.rollback();
+
       // 이 catch 블록의 목적은 예외를 처리 하는 것이 아니라,
-      // rollback을 실행하는 것이다
+      // rollback을 실행하는 것이다.
       // 따라서 예외가 발생한 사실은 이전처럼 호출자에게 그대로 보고해야 한다.
       throw e;
 
@@ -242,7 +246,7 @@ public class ProjectDaoImpl implements ProjectDao{
     ArrayList<Member> list = new ArrayList<>();
 
     try (PreparedStatement stmt = con.prepareStatement(
-        "select" 
+        "select"
             + "    m.no,"
             + "    m.name"
             + " from pms_member_project mp"
@@ -267,8 +271,8 @@ public class ProjectDaoImpl implements ProjectDao{
 
   @Override
   public int deleteMembers(int projectNo) throws Exception {
-    try (PreparedStatement stmt = con.prepareStatement( 
-        "delete from pms_member_project where project_no=?")) { 
+    try (PreparedStatement stmt = con.prepareStatement(
+        "delete from pms_member_project where project_no=?")) {
       stmt.setInt(1, projectNo);
       return stmt.executeUpdate();
     }
