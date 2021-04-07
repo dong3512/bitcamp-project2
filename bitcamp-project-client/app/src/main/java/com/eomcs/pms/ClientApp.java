@@ -35,7 +35,9 @@ import com.eomcs.pms.handler.MemberValidator;
 import com.eomcs.pms.handler.ProjectAddHandler;
 import com.eomcs.pms.handler.ProjectDeleteHandler;
 import com.eomcs.pms.handler.ProjectDetailHandler;
+import com.eomcs.pms.handler.ProjectDetailSearchHandler;
 import com.eomcs.pms.handler.ProjectListHandler;
+import com.eomcs.pms.handler.ProjectSearchHandler;
 import com.eomcs.pms.handler.ProjectUpdateHandler;
 import com.eomcs.pms.handler.TaskAddHandler;
 import com.eomcs.pms.handler.TaskDeleteHandler;
@@ -90,7 +92,7 @@ public class ClientApp {
     // 핸들러가 사용할 DAO 객체 준비
     BoardDao boardDao = new BoardDaoImpl(sqlSession);
     MemberDao memberDao = new MemberDaoImpl(sqlSession);
-    ProjectDao projectDao = new ProjectDaoImpl(con);
+    ProjectDao projectDao = new ProjectDaoImpl(sqlSession);
     TaskDao taskDao = new TaskDaoImpl(sqlSession);
 
     // 사용자 명령을 처리하는 객체를 맵에 보관한다.
@@ -115,7 +117,9 @@ public class ClientApp {
     commandMap.put("/project/list", new ProjectListHandler(projectDao));
     commandMap.put("/project/detail", new ProjectDetailHandler(projectDao));
     commandMap.put("/project/update", new ProjectUpdateHandler(projectDao, memberValidator));
-    commandMap.put("/project/delete", new ProjectDeleteHandler(projectDao));
+    commandMap.put("/project/delete", new ProjectDeleteHandler(projectDao, taskDao));
+    commandMap.put("/project/search", new ProjectSearchHandler(projectDao));
+    commandMap.put("/project/detailSearch", new ProjectDetailSearchHandler(projectDao));
 
     commandMap.put("/task/add", new TaskAddHandler(taskDao, projectDao, memberValidator));
     commandMap.put("/task/list", new TaskListHandler(taskDao));

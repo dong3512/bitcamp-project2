@@ -25,24 +25,28 @@ public class TaskDaoImpl implements TaskDao {
 
   @Override
   public List<Task> findByProjectNo(int projectNo) throws Exception {
-    return sqlSession.selectList("TaskMapper.findByProjectNo",projectNo);
+    return sqlSession.selectList("TaskMapper.findByProjectNo", projectNo);
   }
 
   @Override
   public Task findByNo(int no) throws Exception {
-    return sqlSession.selectOne("TaskMapper.findByNo",no);
+    return sqlSession.selectOne("TaskMapper.findByNo", no);
   }
 
   @Override
   public int update(Task task) throws Exception {
-    return sqlSession.update("TaskMapper.update",task);
+    return sqlSession.update("TaskMapper.update", task);
   }
 
   @Override
   public int delete(int no) throws Exception {
-    return sqlSession.delete("TaskMapper.delete",no);
+    return sqlSession.delete("TaskMapper.delete", no);
   }
 
+  @Override
+  public int deleteByProjectNo(int projectNo) throws Exception {
+    return sqlSession.delete("TaskMapper.deleteByProjectNo", projectNo);
+  }
 }
 
 
