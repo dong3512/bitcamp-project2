@@ -18,9 +18,9 @@ public class ProjectDetailSearchHandler implements Command {
   public void service() throws Exception {
     System.out.println("[프로젝트 상세 검색]");
 
-    String title = Prompt.inputString("프로젝트명?(조건에서 제외: 빈문자열) ");
-    String owner = Prompt.inputString("관리자명?(조건에서 제외: 빈문자열) ");
-    String member = Prompt.inputString("팀원?(조건에서 제외: 빈문자열) ");
+    String title = Prompt.inputString("프로젝트명?(조건에서 제외: 빈 문자열) ");
+    String owner = Prompt.inputString("관리자명?(조건에서 제외: 빈 문자열) ");
+    String member = Prompt.inputString("팀원?(조건에서 제외: 빈 문자열) ");
 
     List<Project> projects = projectDao.findByKeywords(title, owner, member);
 
