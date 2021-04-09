@@ -7,7 +7,7 @@ public class ProjectDeleteHandler implements Command {
 
   ProjectService projectService;
 
-  public ProjectDeleteHandler(ProjectService ProjectService) {
+  public ProjectDeleteHandler(ProjectService projectService) {
     this.projectService = projectService;
   }
 

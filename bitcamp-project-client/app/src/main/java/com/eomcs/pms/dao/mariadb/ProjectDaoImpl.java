@@ -17,7 +17,7 @@ public class ProjectDaoImpl implements ProjectDao {
 
   @Override
   public int insert(Project project) throws Exception {
-    return sqlSession.insert("ProjectMapper.insert",project);
+    return sqlSession.insert("ProjectMapper.insert", project);
   }
 
   @Override
