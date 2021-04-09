@@ -46,7 +46,6 @@ public class MemberDaoImpl implements MemberDao {
     }
     return members.get(0);
   }
-
 }
 
 

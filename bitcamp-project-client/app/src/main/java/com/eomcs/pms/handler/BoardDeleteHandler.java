@@ -5,11 +5,8 @@ import com.eomcs.util.Prompt;
 
 public class BoardDeleteHandler implements Command {
 
-  // 핸들러가 사용할 서비스객체
   BoardService boardService;
 
-  // DAO 객체는 이 클래스가 작업하는데 필수 객체이기 때문에
-  // 생성자를 통해 반드시 주입 받도록 한다.
   public BoardDeleteHandler(BoardService boardService) {
     this.boardService = boardService;
   }

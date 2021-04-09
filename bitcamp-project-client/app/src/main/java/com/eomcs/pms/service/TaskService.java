@@ -10,7 +10,7 @@ import com.eomcs.pms.domain.Board;
 // - 업무에 따라 트랜잭션을 제어하는 일을 한다.
 // - 서비스 객체의 메서드는 가능한 업무 관련 용어를 사용하여 메서드를 정의한다.
 //
-public class BoardService {
+public class TaskService {
 
   // 서비스 객체는 트랜잭션을 제어해야 하기 때문에
   // DAO가 사용하는 SqlSession 객체를 주입 받아야 한다.
@@ -19,7 +19,7 @@ public class BoardService {
   // 비즈니스 로직을 수행하는 동안 데이터 처리를 위해 사용할 DAO 를 주입 받아야 한다.
   BoardDao boardDao;
 
-  public BoardService(SqlSession sqlSession, BoardDao boardDao) {
+  public TaskService(SqlSession sqlSession, BoardDao boardDao) {
     this.sqlSession = sqlSession;
     this.boardDao = boardDao;
   }

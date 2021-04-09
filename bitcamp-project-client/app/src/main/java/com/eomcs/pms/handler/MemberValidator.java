@@ -8,11 +8,8 @@ import com.eomcs.util.Prompt;
 
 public class MemberValidator {
 
-  // 핸들러가 사용할 DAO : 의존 객체(dependency)
   MemberService memberService;
 
-  // DAO 객체는 이 클래스가 작업하는데 필수 객체이기 때문에
-  // 생성자를 통해 반드시 주입 받도록 한다.
   public MemberValidator(MemberService memberService) {
     this.memberService = memberService;
   }
@@ -24,7 +21,7 @@ public class MemberValidator {
         return null;
       } 
 
-      Member m = memberService.findByName(name);
+      Member m = memberService.search(name);
       if (m != null) {
         return m;
       }

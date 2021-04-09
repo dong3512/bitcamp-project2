@@ -16,8 +16,6 @@ public interface MemberDao {
   int delete(int no) throws Exception;
 
   Member findByName(String name) throws Exception;
-
-
 }
 
 
