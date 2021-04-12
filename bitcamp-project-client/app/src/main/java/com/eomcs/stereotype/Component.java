@@ -17,6 +17,6 @@ import java.lang.annotation.Target;
 public @interface Component {
 
   // 이 애노테이션을 붙일 때 추가할 프로퍼티
-  // => 프로퍼티 값을 설정하지 않으면 기본이 빈 문자열("") 이다.
+  // => 프로퍼티 값을 설정하지 않으면 기본이 빈 문자열("")이다.
   String value() default "";
 }
