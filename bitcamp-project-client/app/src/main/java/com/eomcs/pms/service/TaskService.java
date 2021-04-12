@@ -11,12 +11,11 @@ public interface TaskService {
 
   List<Task> listOfProject(int projectNo) throws Exception;
 
-  Task get(int no) throws Exception ;
+  Task get(int no) throws Exception;
 
-  int update(Task task) throws Exception ;
+  int update(Task task) throws Exception;
 
   int delete(int no) throws Exception;
-
 }
 
 

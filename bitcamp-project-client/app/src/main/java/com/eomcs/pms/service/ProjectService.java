@@ -4,7 +4,7 @@ import java.util.List;
 import com.eomcs.pms.domain.Member;
 import com.eomcs.pms.domain.Project;
 
-public interface ProjectService{
+public interface ProjectService {
 
   int add(Project project) throws Exception;
 
@@ -14,15 +14,15 @@ public interface ProjectService{
 
   int update(Project project) throws Exception;
 
-  int delete(int no) throws Exception ;
+  int delete(int no) throws Exception;
 
-  List<Project> search(String title, String owner, String member) throws Exception ;
+  List<Project> search(String title, String owner, String member) throws Exception;
 
   List<Project> search(String item, String keyword) throws Exception;
 
   int deleteMembers(int projectNo) throws Exception;
 
-  int updateMembers(int projectNo, List<Member> members) throws Exception ;
+  int updateMembers(int projectNo, List<Member> members) throws Exception;
 }
 
 

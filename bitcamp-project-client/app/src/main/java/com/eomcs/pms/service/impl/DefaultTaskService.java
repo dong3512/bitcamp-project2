@@ -18,7 +18,7 @@ public class DefaultTaskService implements TaskService {
   SqlSession sqlSession;
 
   // 비즈니스 로직을 수행하는 동안 데이터 처리를 위해 사용할 DAO 를 주입 받아야 한다.
-  TaskDao taskDao;
+  TaskDao taskDao; 
 
   public DefaultTaskService(SqlSession sqlSession, TaskDao taskDao) {
     this.sqlSession = sqlSession;
@@ -26,6 +26,7 @@ public class DefaultTaskService implements TaskService {
   }
 
   // 등록 업무
+  @Override
   public int add(Task task) throws Exception {
     int count = taskDao.insert(task);
     sqlSession.commit();
@@ -33,20 +34,24 @@ public class DefaultTaskService implements TaskService {
   }
 
   // 조회 업무
+  @Override
   public List<Task> list() throws Exception {
     return taskDao.findAll();
   }
 
+  @Override
   public List<Task> listOfProject(int projectNo) throws Exception {
     return taskDao.findByProjectNo(projectNo);
   }
 
   // 상세 조회 업무
+  @Override
   public Task get(int no) throws Exception {
     return taskDao.findByNo(no);
   }
 
   // 변경 업무
+  @Override
   public int update(Task task) throws Exception {
     int count = taskDao.update(task);
     sqlSession.commit();
@@ -54,6 +59,7 @@ public class DefaultTaskService implements TaskService {
   }
 
   // 삭제 업무
+  @Override
   public int delete(int no) throws Exception {
     int count = taskDao.delete(no);
     sqlSession.commit();
