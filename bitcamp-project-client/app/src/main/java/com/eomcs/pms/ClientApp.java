@@ -173,11 +173,11 @@ public class ClientApp {
       // 클래스 정보에서 @Component 애노테이션 정보를 가져온다.
       Component compAnno = clazz.getAnnotation(Component.class);
 
-      // 애노테이션 정보에서 맵에 객체를 저장할 때 키로 사용할 문자열을 꺼낸다.
+      // 애노테이션 정보에서 맵에 객체를 저장할 때 키로 사용할 문자열 꺼낸다.
       String key = null;
-      if (compAnno.value().length() == 0) {
+      if (compAnno.value().length() == 0){
         key = clazz.getName(); // 키로 사용할 문자열이 없으면 클래스 이름을 키로 사용한다.
-      }else {
+      } else {
         key = compAnno.value();
       }
 
@@ -194,7 +194,7 @@ public class ClientApp {
       return false;
     }
 
-    //클래스의 인터페이스 목록을 꺼낸다.
+    // 클래스의 인터페이스 목록을 꺼낸다.
     Class<?>[] interfaces = type.getInterfaces();
 
     // 클래스가 구현한 인터페이스 중에서 Command 인터페이스가 있는지 조사한다.
@@ -232,7 +232,7 @@ public class ClientApp {
           if (clazz.getAnnotation(Component.class) != null) {
             components.add(clazz);
           }
-        }catch (Exception e) {
+        } catch (Exception e) {
           System.out.println("클래스 로딩 오류: " + className);
         }
       }
