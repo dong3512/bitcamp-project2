@@ -50,6 +50,7 @@ public class ClientApp {
         out.println();
         out.flush();
 
+
         String line = null;
         while (true) {
           line = in.readLine();
