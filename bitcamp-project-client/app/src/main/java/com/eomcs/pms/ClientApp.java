@@ -37,7 +37,7 @@ public class ClientApp {
         // 2) 데이터 입출력 스트림 객체를 준비
         PrintWriter out = new PrintWriter(socket.getOutputStream());
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        ){
+        ) {
 
       while (true) {
         String command = com.eomcs.util.Prompt.inputString("명령> ");
@@ -50,7 +50,6 @@ public class ClientApp {
         out.println();
         out.flush();
 
-
         String line = null;
         while (true) {
           line = in.readLine();
@@ -59,11 +58,10 @@ public class ClientApp {
           }
           System.out.println(line);
         }
-
         System.out.println(); // 이전 명령의 실행을 구분하기 위해 빈 줄 출력
 
         if (command.equalsIgnoreCase("quit") || 
-            command.equalsIgnoreCase("exit") || 
+            command.equalsIgnoreCase("exit") ||
             command.equalsIgnoreCase("serverstop")) {
           System.out.println("안녕!");
           break;
@@ -76,5 +74,4 @@ public class ClientApp {
 
     Prompt.close();
   }
-
 }
