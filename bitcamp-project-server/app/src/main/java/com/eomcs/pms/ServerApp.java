@@ -61,6 +61,8 @@ public class ServerApp {
         System.out.println("아직 실행 중인 스레드가 있습니다.");
 
         // 종료를 재시도 한다.
+        // => 대기 중인 작업도 취소한다.
+        // => 실행 중인 스레드 중에서 Not Runnable 상태에 있을 경우에도 강제로 종료시킨다.
         threadPool.shutdownNow();
 
         while (!threadPool.awaitTermination(10, TimeUnit.SECONDS)) {
