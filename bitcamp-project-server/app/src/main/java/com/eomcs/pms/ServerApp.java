@@ -27,6 +27,7 @@ import com.eomcs.pms.dao.MemberDao;
 import com.eomcs.pms.dao.ProjectDao;
 import com.eomcs.pms.dao.TaskDao;
 import com.eomcs.pms.handler.Command;
+import com.eomcs.pms.handler.MemberValidator;
 import com.eomcs.pms.service.BoardService;
 import com.eomcs.pms.service.MemberService;
 import com.eomcs.pms.service.ProjectService;
@@ -38,6 +39,8 @@ import com.eomcs.pms.service.impl.DefaultTaskService;
 import com.eomcs.stereotype.Component;
 import com.eomcs.util.CommandRequest;
 import com.eomcs.util.CommandResponse;
+import com.eomcs.util.Prompt;
+import com.eomcs.util.Session;
 
 public class ServerApp {
 
@@ -72,18 +75,17 @@ public class ServerApp {
 
     // 1) Mybatis 프레임워크 관련 객체 준비
     // => Mybatis 설정 파일을 읽을 입력 스트림 객체 준비
-    // Mybatis 설정 파일을 읽을 입력 스트림 객체 준비
     InputStream mybatisConfigStream = Resources.getResourceAsStream(
         "com/eomcs/pms/conf/mybatis-config.xml");
 
-    // SqlSessionFactory 객체 준비
+    // => SqlSessionFactory 객체 준비
     SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(mybatisConfigStream);
 
-    // DAO가 사용할 SqlSession 객체 준비
-    // => 수동 commit 으로 동작하는 SqlSession 객체를 준비한다.
+    // => DAO가 사용할 SqlSession 객체 준비
+    //    - 수동 commit 으로 동작하는 SqlSession 객체를 준비한다.
     SqlSession sqlSession = sqlSessionFactory.openSession(false);
 
-    // 2) DAO 구현체를 만들어주는 공장 객체를 준비한다.
+    // 2) DAO 구현체를 자동으로 만들어주는 공장 객체를 준비한다.
     MybatisDaoFactory daoFactory = new MybatisDaoFactory(sqlSession);
 
     // 3) 서비스 객체가 사용할 DAO 객체 준비
@@ -100,16 +102,16 @@ public class ServerApp {
     TaskService taskService = new DefaultTaskService(sqlSession, taskDao);
 
     // => 도우미 객체 생성
-    //    MemberValidator memberValidator = new MemberValidator(memberService);
+    MemberValidator memberValidator = new MemberValidator(memberService);
 
-    // => Command 구현체가 사용할 의존 객체를 보관
+    // => Command 구현체가 사용할 의존 객체 보관
     objMap.put("boardService", boardService);
     objMap.put("memberService", memberService);
     objMap.put("projectService", projectService);
     objMap.put("taskService", taskService);
-    //    objMap.put("memberValidator", memberValidator);
+    objMap.put("memberValidator", memberValidator);
 
-    // Command 구현체를 자동 생성하여 맵에 등록
+    // 5) Command 구현체를 자동 생성하여 맵에 등록
     registerCommands();
 
     // 클라이언트 연결을 기다리는 서버 소켓 생성
@@ -131,10 +133,10 @@ public class ServerApp {
       e.printStackTrace();
     }
 
-    // 스레드풀의 대기하고 있는 모든 스레드를 종료시킨다.
+    // 스레드풀에 대기하고 있는 모든 스레드를 종료시킨다.
     // => 단 현재 실행 중인 스레드에 대해서는 작업을 완료한 후 종료하도록 설정한다.
     threadPool.shutdown();
-    System.out.println("서버 종료 중...!");
+    System.out.println("서버 종료 중...");
 
     // 만약 현재 실행 중인 스레드를 강제로 종료시키고 싶다면 
     // 다음 코드를 참고하라!
@@ -148,18 +150,19 @@ public class ServerApp {
         threadPool.shutdownNow();
 
         while (!threadPool.awaitTermination(10, TimeUnit.SECONDS)) {
-          System.out.println("아직 실행중인 스레드가 있습니다.");
+          System.out.println("아직 실행 중인 스레드가 있습니다.");
         } 
 
         System.out.println("모든 스레드를 종료했습니다.");
       }
-    }catch (Exception e) {
-      System.out.println("스레드 강제종료 중에 오류발생!");
+    } catch (Exception e) {
+      System.out.println("스레드 강제 종료 중에 오류 발생!");
     }
 
     System.out.println("서버 종료!");
   }
 
+  // 클라이언트가 접속했을 때 스레드가 호출하는 메서드
   public void processRequest(Socket socket) {
     try (
         Socket clientSocket = socket;
@@ -167,8 +170,14 @@ public class ServerApp {
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
         ) {
 
-      // 클라이언트 보낸 명령을 Command 구현체에게 전달하기 쉽도록 객체에 담는다.
+      // 클라이언트가 보낸 명령을 Command 구현체에게 전달하기 쉽도록 객체에 담는다.
       InetSocketAddress remoteAddr = (InetSocketAddress) clientSocket.getRemoteSocketAddress();
+
+      // 클라이언트로부터 값을 입력 받을 때 사용할 객체를 준비한다.
+      Prompt prompt = new Prompt(in, out);
+
+      // 클라이언트가 접속해 있는 동안 사용할 저장소를 준비한다.
+      Session session = new Session();
 
       while (true) {
         // 클라이언트가 보낸 요청을 읽는다.
@@ -180,11 +189,11 @@ public class ServerApp {
           if (line.length() == 0) {
             break;
           }
-          // 지금은 '요청 명령' 과 '빈 줄' 사이에 존재하는 데이터는 무시한다. 
+          // 지금은 '요청 명령' 과 '빈 줄' 사이에 존재하는 데이터는 무시한다.
         }
 
         // 클라이언트 요청에 대해 기록(log)을 남긴다.
-        System.out.printf("[%s:%d] %s\n",
+        System.out.printf("[%s:%d] %s\n", 
             remoteAddr.getHostString(), remoteAddr.getPort(), requestLine);
 
 
@@ -213,9 +222,11 @@ public class ServerApp {
         }
 
         CommandRequest request = new CommandRequest(
-            requestLine,
+            requestLine, 
             remoteAddr.getHostString(),
-            remoteAddr.getPort());
+            remoteAddr.getPort(), 
+            prompt,
+            session);
 
         CommandResponse response = new CommandResponse(out);
 
@@ -223,7 +234,8 @@ public class ServerApp {
         try {
           command.service(request, response);
         } catch (Exception e) {
-          System.out.println("서버 오류 발생!");
+          out.println("서버 오류 발생!");
+          e.printStackTrace();
         }
         out.println();
         out.flush();
