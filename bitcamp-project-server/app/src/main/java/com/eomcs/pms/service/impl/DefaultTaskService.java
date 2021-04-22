@@ -15,7 +15,7 @@ public class DefaultTaskService implements TaskService {
   // 비즈니스 로직을 수행하는 동안 데이터 처리를 위해 사용할 DAO 를 주입 받아야 한다.
   TaskDao taskDao; 
 
-  public DefaultTaskService( TaskDao taskDao) {
+  public DefaultTaskService(TaskDao taskDao) {
     this.taskDao = taskDao;
   }
 

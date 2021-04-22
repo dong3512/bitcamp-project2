@@ -10,7 +10,7 @@ public class TransactionTemplate {
     this.txManager = txManager;
   }
 
-  public Object execute (TransactionCallback cb) throws Exception {
+  public Object execute(TransactionCallback cb) throws Exception {
     txManager.beginTransaction();
 
     try {
@@ -18,10 +18,9 @@ public class TransactionTemplate {
       txManager.commit();
       return rt;
 
-    }catch (Exception e){
+    } catch (Exception e) {
       txManager.rollback();
       throw e;
     }
-
   }
 }
