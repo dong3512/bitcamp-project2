@@ -54,6 +54,7 @@ public class ServerApp {
   // 서버의 상태를 설정
   boolean isStop;
 
+
   // 객체를 보관할 컨테이너 준비
   Map<String,Object> objMap = new HashMap<>();
 
