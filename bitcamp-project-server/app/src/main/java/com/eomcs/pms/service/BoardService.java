@@ -9,6 +9,7 @@ public interface BoardService {
 
   List<Board> list() throws Exception;
 
+
   Board get(int no) throws Exception;
 
   int update(Board board) throws Exception;
