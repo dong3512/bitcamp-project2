@@ -22,7 +22,6 @@ public class BoardSearchHandler extends HttpServlet {
 
     String keyword = request.getParameter("keyword");
 
-
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
 

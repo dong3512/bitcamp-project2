@@ -23,6 +23,7 @@ public class BoardListHandler extends HttpServlet {
 
     BoardService boardService = (BoardService) request.getServletContext().getAttribute("boardService");
 
+
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
 
