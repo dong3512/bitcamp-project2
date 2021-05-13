@@ -2,7 +2,6 @@ package com.eomcs.pms.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +16,7 @@ import com.eomcs.pms.service.BoardService;
 public class BoardDeleteHandler extends HttpServlet {
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     BoardService boardService = (BoardService) request.getServletContext().getAttribute("boardService");
@@ -51,18 +50,12 @@ public class BoardDeleteHandler extends HttpServlet {
       out.println("<h1>게시글 삭제</h1>");
       out.println("<p>게시글을 삭제하였습니다.</p>");
 
-    }catch (Exception e) {
-      StringWriter strWriter = new StringWriter();
-      PrintWriter printWriter = new PrintWriter(strWriter);
-      e.printStackTrace(printWriter);
-
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>게시글 등록오류</h1>");
-      out.printf("<p>%s</p>\n", e.getMessage());
-      out.printf("<pre>%s</pre>\n", strWriter.toString());
-      out.println("<p><a href='list'>목록</a></p>");
+    } catch (Exception e) {
+      request.setAttribute("exception",e);
+      request.getRequestDispatcher("/error");
+      return;
     }
+
     out.println("</body>");
     out.println("</html>");
   }

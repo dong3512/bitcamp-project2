@@ -2,7 +2,6 @@ package com.eomcs.pms.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,13 +29,12 @@ public class BoardUpdateHandler extends HttpServlet {
     out.println("<title>게시글 변경</title>");
 
     try {
-      request.setCharacterEncoding("UTF-8");
       int no = Integer.parseInt(request.getParameter("no"));
 
       Board oldBoard = boardService.get(no);
       if (oldBoard == null) {
         throw new Exception("해당 번호의 게시글이 없습니다.");
-      }
+      } 
 
       Member loginUser = (Member) request.getSession().getAttribute("loginUser");
       if (oldBoard.getWriter().getNo() != loginUser.getNo()) {
@@ -55,17 +53,10 @@ public class BoardUpdateHandler extends HttpServlet {
       out.println("<h1>게시글 변경</h1>");
       out.println("<p>게시글을 변경하였습니다.</p>");
 
-    }catch (Exception e) {
-      StringWriter strWriter = new StringWriter();
-      PrintWriter printWriter = new PrintWriter(strWriter);
-      e.printStackTrace(printWriter);
-
-      out.println("</head>");
-      out.println("<body>");
-      out.println("<h1>게시글 등록오류</h1>");
-      out.printf("<p>%s</p>\n", e.getMessage());
-      out.printf("<pre>%s</pre>\n", strWriter.toString());
-      out.println("<p><a href='list'>목록</a></p>");
+    } catch (Exception e) {
+      request.setAttribute("exception",e);
+      request.getRequestDispatcher("/error");
+      return;
     }
 
     out.println("</body>");

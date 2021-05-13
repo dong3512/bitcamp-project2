@@ -2,7 +2,6 @@ package com.eomcs.pms.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +16,7 @@ import com.eomcs.pms.service.BoardService;
 public class BoardSearchHandler extends HttpServlet {
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) 
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     String keyword = request.getParameter("keyword");
@@ -49,7 +48,7 @@ public class BoardSearchHandler extends HttpServlet {
       out.println("<tr>");
       out.println("<th>번호</th> <th>제목</th> <th>작성자</th> <th>등록일</th> <th>조회수</th>");
       out.println("</tr>");
-      out.println("<thead>");
+      out.println("</thead>");
       out.println("<tbody>");
 
       for (Board b : list) {
@@ -58,23 +57,23 @@ public class BoardSearchHandler extends HttpServlet {
             + " <td><a href='detail?no=%1$d'>%s</a></td>"
             + " <td>%s</td>"
             + " <td>%s</td>"
-            + " <td>%d</td>"
-            + " </tr>\n", 
+            + " <td>%d</td> </tr>\n", 
             b.getNo(), 
             b.getTitle(), 
             b.getWriter().getName(),
             b.getRegisteredDate(),
             b.getViewCount());
       }
+      out.println("</tbody>");
+      out.println("</table>");
 
     } catch (SearchException e) {
       out.printf("<p>%s</p>\n", e.getMessage());
 
-    }catch (Exception e) {
-      StringWriter strWriter = new StringWriter();
-      PrintWriter printWriter = new PrintWriter(strWriter);
-      out.printf("<pre>%s</pre>\n", strWriter.toString());
-      out.println(strWriter.toString());
+    } catch (Exception e) {
+      request.setAttribute("exception",e);
+      request.getRequestDispatcher("/error");
+      return;
     }
 
     out.println("</body>");
